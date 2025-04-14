@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2 text-center">
+        <h1 class="mb-4">出荷管理システム</h1>
+        <p class="lead">商品の出荷、再出荷、返却処理を行うことができます。</p>
+        
+        <div class="row mt-5">
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">出荷状況一覧</h5>
+                        <p class="card-text">商品の出荷状況を確認します。</p>
+                        <a href="{{ url_for('shipping_list') }}" class="btn btn-info">一覧を表示</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">出荷処理</h5>
+                        <p class="card-text">商品の出荷情報を登録します。</p>
+                        <a href="{{ url_for('shipping') }}" class="btn btn-primary">出荷処理へ</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">再出荷</h5>
+                        <p class="card-text">商品の再出荷情報を登録します。</p>
+                        <a href="{{ url_for('reship') }}" class="btn btn-warning">再出荷へ</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">返却処理</h5>
+                        <p class="card-text">商品の返却情報を登録します。</p>
+                        <a href="{{ url_for('return_item') }}" class="btn btn-danger">返却処理へ</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

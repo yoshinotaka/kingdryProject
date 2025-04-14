@@ -1,0 +1,13 @@
+bind = "0.0.0.0:5000"
+workers = 2
+threads = 2
+timeout = 30
+keepalive = 2
+worker_class = "sync"
+accesslog = "-"
+errorlog = "-"
+loglevel = "debug"
+max_requests = 1000
+max_requests_jitter = 50
+capture_output = True
+enable_stdio_inheritance = True 

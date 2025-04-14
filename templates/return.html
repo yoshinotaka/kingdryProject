@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <h2 class="mb-4">返却処理</h2>
+        <form method="POST">
+            {{ form.csrf_token }}
+            
+            <div class="mb-3">
+                {{ form.shop_id.label(class="form-label") }}
+                {{ form.shop_id(class="form-control") }}
+            </div>
+            
+            <div class="mb-3">
+                {{ form.tag1.label(class="form-label") }}
+                {{ form.tag1(class="form-control") }}
+            </div>
+            
+            <div class="mb-3">
+                {{ form.factory_staff_id.label(class="form-label") }}
+                {{ form.factory_staff_id(class="form-control") }}
+            </div>
+            
+            <div class="mb-3">
+                {{ form.factory_staff_name.label(class="form-label") }}
+                {{ form.factory_staff_name(class="form-control") }}
+            </div>
+            
+            <div class="mb-3">
+                {{ form.factory_location.label(class="form-label") }}
+                {{ form.factory_location(class="form-control") }}
+            </div>
+            
+            <div class="mb-3">
+                {{ form.factory_comment.label(class="form-label") }}
+                {{ form.factory_comment(class="form-control", rows=3) }}
+            </div>
+            
+            <div class="d-grid">
+                <button type="submit" class="btn btn-danger">返却情報を更新</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">出荷状況一覧</h2>
+    
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>店舗ID</th>
+                    <th>伝票番号</th>
+                    <th>タグ1</th>
+                    <th>商品コード</th>
+                    <th>商品名</th>
+                    <th>顧客名</th>
+                    <th>出荷日</th>
+                    <th>出荷便</th>
+                    <th>工場担当者</th>
+                    <th>状態</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.shop_id }}</td>
+                    <td>{{ item.denpyo_no }}</td>
+                    <td>{{ item.tag1 }}</td>
+                    <td>{{ item.shohin_code }}</td>
+                    <td>{{ item.shohin_name }}</td>
+                    <td>{{ item.kokyaku_name }}</td>
+                    <td>{{ item.syukka_date.strftime('%Y-%m-%d') if item.syukka_date else '-' }}</td>
+                    <td>{{ item.syukka_time if item.syukka_time else '-' }}</td>
+                    <td>{{ item.factory_staff_name if item.factory_staff_name else '-' }}</td>
+                    <td>
+                        {% if item.status == 'reship' %}
+                            <span class="badge bg-warning">再出荷</span>
+                        {% elif item.status == 'returned' %}
+                            <span class="badge bg-danger">返却済</span>
+                        {% elif item.syukka_flag == 1 %}
+                            <span class="badge bg-success">出荷済</span>
+                        {% else %}
+                            <span class="badge bg-secondary">未出荷</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %} 

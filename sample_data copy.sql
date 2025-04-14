@@ -1,0 +1,61 @@
+-- テーブル作成
+CREATE TABLE items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    shop_id SMALLINT NOT NULL,
+    denpyo_no VARCHAR(20) NOT NULL,
+    tag1 VARCHAR(20),
+    shohin_code VARCHAR(20) NOT NULL,
+    shohin_name VARCHAR(50) NOT NULL,
+    color VARCHAR(20),
+    contents VARCHAR(200),
+    packaging_shape VARCHAR(30),
+    kokyaku_code VARCHAR(20),
+    kokyaku_name VARCHAR(50),
+    cost_price DECIMAL(10,2),
+    selling_price DECIMAL(10,2),
+    tax_status VARCHAR(10),
+    nyuuka_code VARCHAR(20),
+    syukka_code VARCHAR(20),
+    course VARCHAR(50),
+    higiri_flag TINYINT(2) DEFAULT 0,
+    delivery_date DATETIME,
+    syukka_date DATETIME,
+    syukka_time VARCHAR(20),
+    syukka_flag TINYINT(2) DEFAULT 0,
+    seikyuu_flag TINYINT(2) DEFAULT 0,
+    azukari_date DATETIME,
+    shiage_date DATETIME,
+    return_datetime DATETIME,
+    factory_staff_id VARCHAR(10),
+    factory_staff_name VARCHAR(30),
+    factory_location VARCHAR(50),
+    factory_process_datetime DATETIME,
+    factory_comment TEXT,
+    tag2 VARCHAR(20),
+    status VARCHAR(20),
+    comment TEXT,
+    image_path VARCHAR(255),
+    signature_path VARCHAR(255),
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- サンプルデータの挿入
+INSERT INTO items (
+    shop_id, denpyo_no, tag1, shohin_code, shohin_name, color, contents,
+    packaging_shape, kokyaku_code, kokyaku_name, cost_price, selling_price,
+    tax_status, nyuuka_code, syukka_code, course, higiri_flag, delivery_date,
+    syukka_date, syukka_time, syukka_flag, seikyuu_flag, azukari_date,
+    shiage_date, return_datetime, factory_staff_id, factory_staff_name,
+    factory_location, factory_process_datetime, factory_comment, tag2,
+    status, comment, image_path, signature_path, created_at, updated_at
+) VALUES (
+    1, 'DEN001', 'TAG1', 'SHO001', '商品名1', '赤', '内容1',
+    '箱', 'KOK001', '顧客名1', 1000.00, 2000.00,
+    '税込', 'NYU001', 'SYU001', 'コース1', 0, '2025-04-13 00:00:00',
+    '2025-04-13 00:00:00', '午前', 0, 0, '2025-04-13 00:00:00',
+    '2025-04-13 00:00:00', '2025-04-13 00:00:00', 'STAFF001', 'スタッフ名1',
+    '工場1', '2025-04-13 00:00:00', 'コメント1', 'TAG2',
+    'ステータス1', 'コメント1', '/path/to/image1.jpg', '/path/to/signature1.jpg',
+    NOW(), NOW()
+);

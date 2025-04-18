@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>店舗ID: {{ shop_id }} の商品一覧</h2>
+    <div class="mt-3">
+        <a href="{{ url_for('shop_list') }}" class="btn btn-secondary">店舗一覧に戻る</a>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped" id="itemsTable">
+            <thead>
+                <tr>
+                    <th>お預かり日</th>
+                    <th>タグ1</th>
+                    <th>コース</th>
+                    <th>色</th>
+                    <th>内容</th>
+                    <th>出荷日</th>
+                    <th>出荷時間</th>
+                    <th>工場担当者</th>
+                    <th>状態</th>
+                    <th>商品名</th>
+                </tr>
+            </thead>
+            <tbody id="itemsBody">
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.azukari_date.strftime('%Y-%m-%d') if item.azukari_date else '' }}</td>
+                    <td>{{ item.tag1 }}</td>
+                    <td>{{ item.course }}</td>
+                    <td>{{ item.color }}</td>
+                    <td>{{ item.contents }}</td>
+                    <td>{{ item.syukka_date.strftime('%Y-%m-%d') if item.syukka_date else '' }}</td>
+                    <td>{{ item.syukka_time }}</td>
+                    <td>{{ item.factory_staff_name }}</td>
+                    <td>{{ item.status }}</td>
+                    <td>{{ item.shohin_name }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+</div>
+
+<script>
+let currentPage = 1;
+const shopId = "{{ shop_id }}";
+let isLoading = false;
+let hasMoreData = true;
+
+// スクロールイベントの監視
+window.addEventListener('scroll', function() {
+    if (isLoading || !hasMoreData) return;
+    
+    const table = document.getElementById('itemsTable');
+    const tableBottom = table.getBoundingClientRect().bottom;
+    const windowHeight = window.innerHeight;
+    
+    if (tableBottom < windowHeight + 100) {
+        loadMoreItems();
+    }
+});
+
+// 追加データの読み込み
+function loadMoreItems() {
+    if (isLoading) return;
+    
+    isLoading = true;
+    currentPage++;
+    
+    fetch(`/api/shop_items?shop_id=${shopId}&page=${currentPage}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.items.length === 0) {
+                hasMoreData = false;
+                return;
+            }
+            
+            const tbody = document.getElementById('itemsBody');
+            data.items.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.azukari_date}</td>
+                    <td>${item.tag1 || ''}</td>
+                    <td>${item.course || ''}</td>
+                    <td>${item.color || ''}</td>
+                    <td>${item.contents || ''}</td>
+                    <td>${item.syukka_date}</td>
+                    <td>${item.syukka_time || ''}</td>
+                    <td>${item.factory_staff_name || ''}</td>
+                    <td>${item.status || ''}</td>
+                    <td>${item.shohin_name || ''}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        })
+        .catch(error => {
+            console.error('Error loading more items:', error);
+        })
+        .finally(() => {
+            isLoading = false;
+        });
+}
+</script>
+{% endblock %} 

@@ -1,0 +1,86 @@
+/* 共通のスタイル */
+.sortable {
+    cursor: pointer;
+    position: relative;
+    padding-right: 30px;
+    background-color: #f8f9fa;
+}
+
+.sortable:hover {
+    background-color: #e9ecef;
+}
+
+.sort-icon {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #6c757d;
+    transition: color 0.2s;
+}
+
+.sort-icon::after {
+    content: '↕';
+    font-weight: bold;
+}
+
+.sort-icon.asc::after {
+    content: '↑';
+    color: #0d6efd;
+}
+
+.sort-icon.desc::after {
+    content: '↓';
+    color: #0d6efd;
+}
+
+/* テーブルのスタイル */
+.table-responsive {
+    margin-top: 1rem;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+/* アラートのスタイル */
+.alert {
+    z-index: 1050;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+/* アコーディオンのスタイル */
+.accordion-button:not(.collapsed) {
+    background-color: #e7f1ff;
+    color: #0c63e4;
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+    border-color: rgba(0,0,0,.125);
+}
+
+/* ボタンのスタイル */
+.btn {
+    min-width: 80px;
+}
+
+/* クリック可能な要素のスタイル */
+.clickable {
+    cursor: pointer;
+}
+
+.clickable:hover {
+    background-color: #f8f9fa;
+} 

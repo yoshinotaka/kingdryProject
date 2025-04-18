@@ -1,49 +1,46 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-8 offset-md-2 text-center">
-        <h1 class="mb-4">出荷管理システム</h1>
-        <p class="lead">商品の出荷、再出荷、返却処理を行うことができます。</p>
+<div class="container">
+    <h2 class="mb-4">出荷管理システム</h2>
+    
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">出荷処理</h5>
+                    <p class="card-text">商品の出荷処理を行います。</p>
+                    <a href="{{ url_for('shipping') }}" class="btn btn-primary">出荷処理へ</a>
+                </div>
+            </div>
+        </div>
         
-        <div class="row mt-5">
-            <div class="col-md-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">出荷状況一覧</h5>
-                        <p class="card-text">商品の出荷状況を確認します。</p>
-                        <a href="{{ url_for('shipping_list') }}" class="btn btn-info">一覧を表示</a>
-                    </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">出荷状況一覧</h5>
+                    <p class="card-text">出荷状況を確認します。</p>
+                    <a href="{{ url_for('shipping_list') }}" class="btn btn-primary">一覧表示へ</a>
                 </div>
             </div>
-            
-            <div class="col-md-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">出荷処理</h5>
-                        <p class="card-text">商品の出荷情報を登録します。</p>
-                        <a href="{{ url_for('shipping') }}" class="btn btn-primary">出荷処理へ</a>
-                    </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">出荷処理ログ</h5>
+                    <p class="card-text">過去の出荷処理履歴を確認します。</p>
+                    <a href="{{ url_for('show_logs') }}" class="btn btn-primary">ログ表示へ</a>
                 </div>
             </div>
-            
-            <div class="col-md-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">再出荷</h5>
-                        <p class="card-text">商品の再出荷情報を登録します。</p>
-                        <a href="{{ url_for('reship') }}" class="btn btn-warning">再出荷へ</a>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">返却処理</h5>
-                        <p class="card-text">商品の返却情報を登録します。</p>
-                        <a href="{{ url_for('return_item') }}" class="btn btn-danger">返却処理へ</a>
-                    </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">店舗専用システム</h5>
+                    <p class="card-text">店舗ごとの商品一覧を確認します。</p>
+                    <a href="{{ url_for('shop_list') }}" class="btn btn-info">店舗一覧へ</a>
                 </div>
             </div>
         </div>

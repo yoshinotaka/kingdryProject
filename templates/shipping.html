@@ -1,61 +1,133 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-6 offset-md-3">
-        <h2 class="mb-4">出荷処理</h2>
-        <form method="POST">
-            {{ form.csrf_token }}
-            
-            <div class="mb-3">
-                {{ form.shop_id.label(class="form-label") }}
-                {{ form.shop_id(class="form-control") }}
-            </div>
-            
-            <div class="mb-3">
-                {{ form.tag1.label(class="form-label") }}
-                {{ form.tag1(class="form-control") }}
-            </div>
-            
-            <div class="mb-3">
-                {{ form.factory_staff_id.label(class="form-label") }}
-                {{ form.factory_staff_id(class="form-control") }}
-            </div>
-            
-            <div class="mb-3">
-                {{ form.factory_staff_name.label(class="form-label") }}
-                {{ form.factory_staff_name(class="form-control") }}
-            </div>
-            
-            <div class="mb-3">
-                {{ form.factory_location.label(class="form-label") }}
-                {{ form.factory_location(class="form-control") }}
-            </div>
-            
-            <div class="mb-3">
-                {{ form.syukka_date.label(class="form-label") }}
-                {{ form.syukka_date(class="form-control") }}
-            </div>
-            
-            <div class="mb-3">
-                {{ form.syukka_time.label(class="form-label") }}
-                {{ form.syukka_time(class="form-select") }}
-            </div>
-            
-            <div class="mb-3">
-                {{ form.packaging_shape.label(class="form-label") }}
-                {{ form.packaging_shape(class="form-control") }}
-            </div>
-            
-            <div class="mb-3">
-                {{ form.factory_comment.label(class="form-label") }}
-                {{ form.factory_comment(class="form-control", rows=3) }}
-            </div>
-            
-            <div class="d-grid">
-                <button type="submit" class="btn btn-primary">出荷情報を更新</button>
-            </div>
-        </form>
+<div class="container">
+    <h2>出荷処理</h2>
+    
+    {% if show_selection and items %}
+    <div class="alert alert-info">
+        <p>複数の商品が見つかりました。処理する商品を選択してください。</p>
     </div>
+    
+    <form method="POST" action="{{ url_for('select_item') }}">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>選択</th>
+                        <th>店舗ID</th>
+                        <th>タグ1</th>
+                        <th>商品名</th>
+                        <th>預かり日</th>
+                        <th>ステータス</th>
+                        <th>出荷フラグ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td>
+                            <input type="radio" name="selected_item_id" value="{{ item.id }}" required>
+                        </td>
+                        <td>{{ item.shop_id }}</td>
+                        <td>{{ item.tag1 }}</td>
+                        <td>{{ item.shohin_name }}</td>
+                        <td>{{ item.azukari_date.strftime('%Y-%m-%d') if item.azukari_date else '' }}</td>
+                        <td>{{ item.status }}</td>
+                        <td>{{ '出荷済み' if item.syukka_flag else '未出荷' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="form-group">
+            <label for="factory_staff_id">工場スタッフID</label>
+            <input type="text" class="form-control" id="factory_staff_id" name="factory_staff_id">
+        </div>
+        
+        <div class="form-group">
+            <label for="factory_staff_name">工場スタッフ名</label>
+            <input type="text" class="form-control" id="factory_staff_name" name="factory_staff_name">
+        </div>
+        
+        <div class="form-group">
+            <label for="factory_location">工場場所</label>
+            <input type="text" class="form-control" id="factory_location" name="factory_location">
+        </div>
+        
+        <div class="form-group">
+            <label for="syukka_date">出荷日</label>
+            <input type="date" class="form-control" id="syukka_date" name="syukka_date">
+        </div>
+        
+        <div class="form-group">
+            <label for="syukka_time">出荷時間</label>
+            <input type="time" class="form-control" id="syukka_time" name="syukka_time">
+        </div>
+        
+        <div class="form-group">
+            <label for="packaging_shape">包装形状</label>
+            <input type="text" class="form-control" id="packaging_shape" name="packaging_shape">
+        </div>
+        
+        <div class="form-group">
+            <label for="factory_comment">工場コメント</label>
+            <textarea class="form-control" id="factory_comment" name="factory_comment" rows="3"></textarea>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">出荷処理を実行</button>
+    </form>
+    {% else %}
+    <form method="POST">
+        {{ form.csrf_token }}
+        <div class="form-group">
+            <label for="shop_id">店舗ID</label>
+            {{ form.shop_id(class="form-control") }}
+        </div>
+        
+        <div class="form-group">
+            <label for="tag1">タグ1</label>
+            {{ form.tag1(class="form-control") }}
+        </div>
+        
+        <div class="form-group">
+            <label for="factory_staff_id">工場スタッフID</label>
+            {{ form.factory_staff_id(class="form-control") }}
+        </div>
+        
+        <div class="form-group">
+            <label for="factory_staff_name">工場スタッフ名</label>
+            {{ form.factory_staff_name(class="form-control") }}
+        </div>
+        
+        <div class="form-group">
+            <label for="factory_location">工場場所</label>
+            {{ form.factory_location(class="form-control") }}
+        </div>
+        
+        <div class="form-group">
+            <label for="syukka_date">出荷日</label>
+            {{ form.syukka_date(class="form-control") }}
+        </div>
+        
+        <div class="form-group">
+            <label for="syukka_time">出荷時間</label>
+            {{ form.syukka_time(class="form-control") }}
+        </div>
+        
+        <div class="form-group">
+            <label for="packaging_shape">包装形状</label>
+            {{ form.packaging_shape(class="form-control") }}
+        </div>
+        
+        <div class="form-group">
+            <label for="factory_comment">工場コメント</label>
+            {{ form.factory_comment(class="form-control", rows="3") }}
+        </div>
+        
+        <button type="submit" class="btn btn-primary">出荷処理を実行</button>
+    </form>
+    {% endif %}
 </div>
 {% endblock %} 

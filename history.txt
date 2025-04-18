@@ -1,0 +1,523 @@
+    1  ls
+    2  eixt
+    3  exit
+    4  cd /var/
+    5  ls
+    6  mkdir www
+    7  sudo mkdir www
+    8  cd www/
+    9  sudo mkdir html
+   10  ls
+   11  sudo dnf install -y tar
+   12  ls
+   13  pwd
+   14  mkdir LINE
+   15  sudo mkdir LINE
+   16  ls
+   17  rm LINE/
+   18  rm -r LINE/
+   19  sudo rm -r LINE/
+   20  ls
+   21  ls
+   22  scp -r root@kingdrysystem.com:/var/www/html/LINE ./LINE
+   23  sudo scp -r root@kingdrysystem.com:/var/www/html/LINE ./LINE
+   24  rsync -avz root@kingdrysystem.com:/var/www/html/LINE ./
+   25  rsync --version
+   26  sudo dnf install rsync -y
+   27  rsync --version
+   28  rsync -avz root@kingdrysystem.com:/var/www/html/LINE ./
+   29  sudo rsync -avz root@kingdrysystem.com:/var/www/html/LINE ./
+   30  ls
+   31  mkdir -p kingProject
+   32  sudo mkdir -p kingProject
+   33  cd kingProject/
+   34  ls
+   35  cd ..
+   36  ls
+   37  ls- la
+   38  ls -la
+   39  cd kingProject/
+   40  ls
+   41  docker-compose up --build
+   42  [alma@tk2-108-55306 kingProject]$ docker-compose up --build
+   43  Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?[alma@tk2-108-55306 kingProject]$ docker-compose up --build
+   44  Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?
+   45  Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?[alma@tk2-108-55306 kingProject]$ docker-compose up --build
+   46  sudo systemctl start docker
+   47  sudo systemctl enable docker
+   48  cd kingProject
+   49  docker-compose up --build
+   50  sudo systemctl start docker
+   51  podman run -d -p 5000:5000 --name kingproject-container kingproject
+   52  sudo systemctl status docker
+   53  podman logs kingproject-container
+   54  curl http://153.121.39.60:5000
+   55  podman logs kingproject-container
+   56  curl http://153.121.39.60:5000
+   57  curl -k https://153.121.39.60:5000
+   58  podman stop kingproject-container
+   59  podman rm kingproject-container
+   60  podman run -d -p 153.121.39.60:5000:5000 --name kingproject-container kingproject
+   61  curl -k https://153.121.39.60:5000
+   62  podman run -d -p 153.121.39.60:5000:5000 --name kingproject-container kingproject
+   63  podman stop kingproject-container
+   64  podman rm kingproject-container
+   65  podman run -d -p 153.121.39.60:5000:5000 --name kingproject-container kingproject
+   66  sudo chmod 777 kingProject
+   67  sudo curl -L "https://github.com/docker/compose/releases/download/v2.24.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && sudo chmod +x /usr/local/bin/docker-compose
+   68  docker --version
+   69  sudo yum install -y docker
+   70  docker-compose -up --build
+   71  docker-compose up --build
+   72  sudo systemctl start podman
+   73  sudo dnf install -y podman-compose
+   74  cd kingProject && podman build -t kingproject .
+   75  d kingProject && podman build -t kingproject .
+   76  podman run -d -p 5000:5000 --name kingproject-container kingproject
+   77  podman ps
+   78  curl http://localhost:5000
+   79  podman ps -a
+   80  podman stop kingproject-container && podman rm kingproject-container
+   81  podman run -d -p 153.121.39.60:5000:5000 --name kingproject-container kingproject
+   82  sudo firewall-cmd --list-ports
+   83  mkdir -p kingProject/certs && cd kingProject/certs && openssl req -x509 -newkey rsa:4096 -nodes -out cert.pem -keyout key.pem -days 365 -subj "/CN=153.121.39.60"
+   84  cd kingProject && podman build -t kingproject .
+   85  cd /var/www/html/kingProject && podman build -t kingproject .
+   86  podman stop kingproject-container && podman rm kingproject-container && podman run -d -p 153.121.39.60:5000:5000 --name kingproject-container kingproject
+   87  cd /var/www/html/kingProject && podman build -t kingproject . && podman stop kingproject-container && podman rm kingproject-container && podman run -d -p 153.121.39.60:5000:5000 --name kingproject-container kingproject
+   88  cd /var/www/html/kingProject && mkdir -p certs && cd certs && openssl req -x509 -newkey rsa:4096 -nodes -out cert.pem -keyout key.pem -days 365 -subj "/CN=153.121.39.60" && cd .. && podman build -t kingproject . && podman stop kingproject-container && podman rm kingproject-container && podman run -d -p 153.121.39.60:5000:5000 --name kingproject-container kingproject
+   89  curl -k https://localhost:5000
+   90  podman ps -a
+   91  podman logs kingproject-container
+   92  sudo firewall-cmd --state
+   93  netstat -tuln | grep 5000
+   94  ss -tuln | grep 5000
+   95  podman stop kingproject-container && podman rm kingproject-container
+   96  cd /var/www/html/kingProject && podman build -t kingproject . && podman run -d -p 153.121.39.60:5000:5000 --name kingproject-container kingproject
+   97  podman logs kingproject-container
+   98  curl -k -v https://153.121.39.60:5000
+   99  sudo dnf install -y firewalld && sudo systemctl start firewalld && sudo systemctl enable firewalld
+  100  sudo firewall-cmd --permanent --add-port=5000/tcp && sudo firewall-cmd --reload
+  101  sudo firewall-cmd --list-ports
+  102  podman stop kingproject-container && podman rm kingproject-container && podman run -d -p 153.121.39.60:5000:5000 --name kingproject-container kingproject
+  103  cd /var/www/html/kingProject && podman build -t kingproject . && podman stop kingproject-container && podman rm kingproject-container && podman run -d -p 0.0.0.0:5000:5000 --name kingproject-container kingproject
+  104  podman logs kingproject-container
+  105  ip addr show
+  106  cd /var/www/html/kingProject/certs && openssl req -x509 -newkey rsa:4096 -nodes -out cert.pem -keyout key.pem -days 365 -subj "/CN=alma.kingdrysystem.com"
+  107  cd /var/www/html/kingProject && podman build -t kingproject . && podman stop kingproject-container && podman rm kingproject-container && podman run -d -p 80:5000 --name kingproject-container kingproject
+  108  sudo podman run -d -p 80:5000 --name kingproject-container kingproject
+  109  cd /var/www/html/kingProject && podman build -t kingproject . && podman stop kingproject-container && podman rm kingproject-container && podman run -d -p 153.121.39.60:5000:5000 --name kingproject-container kingproject
+  110  cd /var/www/html/kingProject && podman stop kingproject-container && podman rm kingproject-container && podman-compose up --build -d
+  111  cd /var/www/html/kingProject && podman build -t kingproject-app . && podman build -t kingproject-nginx -f Dockerfile.nginx . && podman run -d --name kingproject-app kingproject-app && podman run -d -p 80:80 --name kingproject-nginx kingproject-nginx
+  112  sudo dnf install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+  113  sudo dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo && sudo dnf install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+  114  sudo dnf remove -y podman-docker && sudo dnf install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin --allowerasing
+  115  sudo systemctl start docker && sudo systemctl enable docker
+  116  cd /var/www/html/kingProject && docker stop $(docker ps -a -q) && docker rm $(docker ps -a -q)
+  117  sudo systemctl restart docker
+  118  cd /var/www/html/kingProject && docker build -t kingproject-app . && docker build -t kingproject-nginx -f Dockerfile.nginx .
+  119  sudo systemctl status docker
+  120  cd /var/www/html/kingProject && docker-compose down && docker-compose up --build -d
+  121  sudo systemctl restart docker
+  122  sudo chmod 666 /var/run/docker.sock
+  123  cd /var/www/html/kingProject && docker-compose down && docker-compose up --build -d
+  124  sudo usermod -aG docker $USER && newgrp docker
+  125  docker info
+  126  export DOCKER_HOST="unix:///var/run/docker.sock" && docker info
+  127  cd /var/www/html/kingProject && docker-compose down && docker-compose up --build -d
+  128  exec su - $USER
+  129  docker-compose ps
+  130  cd kingProject && docker-compose ps
+  131  docker-compose logs web
+  132  docker-compose down && docker-compose build && docker-compose up -d
+  133  cd kingProject && docker-compose build && docker-compose up -d
+  134  docker-compose build && docker-compose up -d
+  135  docker-compose restart nginx
+  136  docker-compose restart web
+  137  docker-compose logs web | tail -n 50
+  138  docker-compose ps
+  139  docker-compose down
+  140  docker-compose up -d
+  141  docker-compose ps
+  142  docker-compose logs web --tail=100
+  143  docker-compose exec db mysql -u shipping_user -pshipping_password shipping_db -e "SHOW TABLES;"
+  144  mysql -u shipping_user -p shipping_db -h db
+  145  sudo systemctl status mysql
+  146  docker ps
+  147  docker ps | grep phpmyadmin
+  148  netstat -tuln | grep 8080
+  149  ip addr show
+  150  sudo ufw status
+  151  ss -tuln | grep 8080
+  152  sudo systemctl status firewalld
+  153  docker ps
+  154  docker network ls
+  155  docker network inspect app-network
+  156  sudo firewall-cmd --add-port=8080/tcp --permanent
+  157  sudo firewall-cmd --reload
+  158  ss -tuln | grep 8080
+  159  docker logs kingproject-db
+  160  docker-compose up -d
+  161  # コンテナを停止して削除
+  162  docker-compose down
+  163  # ボリュームも含めて完全にクリーンアップ
+  164  docker-compose down -v
+  165  # データベースコンテナに接続
+  166  docker exec -it kingproject-db mysql -u shipping_user -pshipping_password shipping_db
+  167  # テーブルの存在確認
+  168  SHOW TABLES;
+  169  getenforce
+  170  sudo firewall-cmd --add-port=8080/tcp --permanent
+  171  sudo firewall-cmd --reload
+  172  sudo firewall-cmd --list-all
+  173  sudo firewall-cmd --add-port=8080/tcp --permanent
+  174  sudo firewall-cmd --reload
+  175  docker logs kingproject-phpmyadmin
+  176  docker inspect kingproject-phpmyadmin
+  177  ss -tuln | grep 8080
+  178  cd /var/www/html/kingProject
+  179  docker-compose down
+  180  docker-compose up -d
+  181  docker exec -it kingproject-db mysql -u shipping_user -p shipping_db
+  182  cd /var/www/html/kingProject
+  183  docker-compose down -v   # -v オプションでボリュームも削除
+  184  docker-compose up -d
+  185  cd kingProject/
+  186  docker-compose up -d
+  187  docker-compose down -v
+  188  docker-compose up -d
+  189  cd kingProject/
+  190  [alma@tk2-108-55306 html]$ docker-compose down -v
+  191  docker-compose up -d
+  192  no configuration file provided: not found
+  193  docker-compose down -v
+  194  docker-compose up -d
+  195  cd kingProject/
+  196  docker-compose down -v
+  197  docker-compose up -d
+  198  /usr/sbin/mysqld: ready for connections. Version: '8.0.41'  socket: '/var/run/mysqld/mysqld.sock'  port: 3306  MySQL Community Server - GPL.
+  199  mysql -u shipping_user -p shipping_db -h db
+  200  docker exec -it kingproject-db mysql -u shipping_user -p shipping_db
+  201  docker ps -a
+  202  cd /var/www/html/kingProject
+  203  docker-compose up -d
+  204  docker logs kingproject-app
+  205  docker-compose down
+  206  docker-compose up -d
+  207  docker ps | grep kingproject-db
+  208  docker-compose down && docker-compose up -d
+  209  docker ps | grep kingproject-db
+  210  docker-compose down
+  211  docker-compose up -d
+  212  docker-compose down
+  213  docker-compose up -d
+  214  docker-compose down
+  215  docker-compose up -d
+  216  docker-compose down
+  217  docker-compose up -d
+  218  docker exec -it kingproject-db mysql -u shipping_user -pshipping_password shipping_db -e "SHOW TABLES;"
+  219  docker ps
+  220  docker-compose down
+  221  docker-compose up -d
+  222  [alma@tk2-108-55306 kingProject]$ docker-compose down
+  223  [+] Running 5/5
+  224   ✔ Container kingproject-nginx       Removed                                                                        0.3s 
+  225   ✔ Container kingproject-phpmyadmin  Removed                                                                        1.3s 
+  226   ✔ Container kingproject-app         Removed                                                                        1.6s 
+  227   ✔ Container kingproject-db          Removed                                                                        0.0s 
+  228   ✔ Network kingproject_app-network   Removed                                                                        0.2s 
+  229  [alma@tk2-108-55306 kingProject]$ docker-compose up -d
+  230  [+] Running 4/5
+  231   ⠴ Network kingproject_app-network   Created                                                                        1.5s 
+  232   ✔ Container kingproject-db          Started                                                                        0.4s 
+  233   ✔ Container kingproject-app         Started                                                                        0.8s 
+  234   ✔ Container kingproject-phpmyadmin  Started                                                                        0.8s 
+  235   ✔ Container kingproject-nginx       Started                                                                        1.2s 
+  236  [alma@tk2-108-55306 kingProject]$ 
+  237  docker ps
+  238  docker exec -it kingproject-db mysql -u shipping_user -pshipping_password shipping_db -e "SHOW TABLES;"
+  239  docker ps
+  240  docker ps | grep kingproject-db
+  241  docker ps
+  242  docker-compose up -d db
+  243  docker ps
+  244  docker exec -it kingproject-db mysql -u shipping_user -pshipping_password shipping_db -e "SHOW TABLES;"
+  245  docker exec -it kingproject-db mysql -u shipping_user -pshipping_password shipping_db -e "select * from items;"
+  246  docker logs kingproject-app
+  247  docker-compose down
+  248  docker-compose up -d 
+  249  docker ps
+  250  docker logs kingproject-app
+  251  docker ps | grep kingproject-db
+  252  docker-compose up -d db 
+  253  docker ps | grep kingproject-db
+  254  docker ps
+  255  docker-compose up -d db 
+  256  docker ps
+  257  docker rm -f kingproject-db
+  258  docker volume rm kingproject_mysql_data
+  259  docker-compose up -d db
+  260  docker ps
+  261  docker exec -it kingproject-db mysql -u shipping_user -pshipping_password shipping_db -e "SHOW TABLES;"
+  262  docker logs kingproject-db
+  263  docker-compose down
+  264  docker volume rm kingproject_mysql_data
+  265  cat > mysql/my.cnf << 'EOF'
+  266  [mysqld]
+  267  bind-address = 0.0.0.0
+  268  port = 3306
+  269  user = mysql
+  270  pid-file = /var/run/mysqld/mysqld.pid
+  271  socket = /var/run/mysqld/mysqld.sock
+  272  basedir = /usr
+  273  datadir = /var/lib/mysql
+  274  tmpdir = /tmp
+  275  lc-messages-dir = /usr/share/mysql
+  276  skip-external-locking
+  277  key_buffer_size = 16M
+  278  max_allowed_packet = 16M
+  279  thread_stack = 192K
+  280  thread_cache_size = 8
+  281  myisam-recover-options = BACKUP
+  282  query_cache_limit = 1M
+  283  query_cache_size = 16M
+  284  log_error = /var/log/mysql/error.log
+  285  expire_logs_days = 10
+  286  max_binlog_size = 100M
+  287  default_authentication_plugin = mysql_native_password
+  288  [mysqld_safe]
+  289  socket = /var/run/mysqld/mysqld.sock
+  290  nice = 0
+  291  [client]
+  292  port = 3306
+  293  socket = /var/run/mysqld/mysqld.sock
+  294  EOF
+  295  cat > mysql/my.cnf << 'EOF'
+  296  [mysqld]
+  297  bind-address = 0.0.0.0
+  298  port = 3306
+  299  user = mysql
+  300  pid-file = /var/run/mysqld/mysqld.pid
+  301  socket = /var/run/mysqld/mysqld.sock
+  302  basedir = /usr
+  303  datadir = /var/lib/mysql
+  304  tmpdir = /tmp
+  305  lc-messages-dir = /usr/share/mysql
+  306  skip-external-locking
+  307  key_buffer_size = 16M
+  308  max_allowed_packet = 16M
+  309  thread_stack = 192K
+  310  thread_cache_size = 8
+  311  myisam-recover-options = BACKUP
+  312  query_cache_limit = 1M
+  313  query_cache_size = 16M
+  314  log_error = /var/log/mysql/error.log
+  315  expire_logs_days = 10
+  316  max_binlog_size = 100M
+  317  default_authentication_plugin = mysql_native_password
+  318  [mysqld_safe]
+  319  socket = /var/run/mysqld/mysqld.sock
+  320  nice = 0
+  321  [client]
+  322  port = 3306
+  323  socket = /var/run/mysqld/mysqld.sock
+  324  EOF
+  325  docker-compose ps
+  326  docker ps
+  327  docker-compose down
+  328  docker-compose up -d 
+  329  docker ps
+  330  ls
+  331  cd /var/www/html/
+  332  ls
+  333  exit
+  334  ps
+  335  cd /var/www/html/kingProject/
+  336  ls
+  337  docker ps
+  338  docker-compose donw
+  339  docker-compose down
+  340  docker-compose up -d 
+  341  who -a
+  342  s
+  343  w
+  344  ps aux | grep ssh
+  345  sudo journalctl -u sshd
+  346  sudo pkill -u unknown
+  347  sudo kill -9 2997
+  348  sudo kill -9 2998
+  349  ps aux | grep ssh
+  350  docker exec kingdryproject-app python batch/insert_files.py
+  351  docker exec kingdryProject-app python batch/insert_files.py
+  352  docker exec kingproject-app python batch/insert_files.py
+  353  docker-compose build
+  354  docker-compose up -d
+  355  docker-compose down
+  356  docker-compose up -d
+  357  docker stop kingproject-phpmyadmin
+  358  docker-compose up -d
+  359  docker-compose down
+  360  docker-compose up -d
+  361  docker ps
+  362     sudo iptables -L | grep 8080
+  363  docker stop kingproject-phpmyadmin
+  364  docker rm kingproject-phpmyadmin
+  365  docker run -d --name kingproject-phpmyadmin -p 8080:80 --network kingproject_default -e PMA_HOST=db phpmyadmin/phpmyadmin
+  366  docker ps | grep phpmyadmin
+  367  docker restart kingproject-phpmyadmin
+  368  docker logs kingproject-phpmyadmin
+  369  sudo ufw status | grep 8080
+  370  netstat -tuln | grep 8080
+  371  ss -tuln | grep 8080
+  372  docker network ls
+  373  docker stop bc9b54eb8d75d9c90b57808eab126829e8f5670c1bda0e3b359e3fb6cc510070
+  374  docker rm bc9b54eb8d75d9c90b57808eab126829e8f5670c1bda0e3b359e3fb6cc510070
+  375  docker-compose up -d
+  376  docker ps
+  377  docker network inspect kingproject_app-network
+  378  docker logs kingproject-phpmyadmin
+  379  docker exec kingproject-phpmyadmin curl -I http://localhost
+  380  docker restart kingproject-phpmyadmin
+  381  ss -tuln | grep 8080
+  382     sudo iptables -A INPUT -p tcp --dport 8080 -j ACCEPT
+  383  cd /var/www/html/kingProject/
+  384  docker-compose down
+  385  docker-compose up -d
+  386  docker ps -a | grep kingProject
+  387  docker-compose up -d
+  388  docker exec kingproject-app pip uninstall -y numpy pandas && docker exec kingproject-app pip install numpy==1.24.3 pandas==2.0.3
+  389  docker exec kingproject-app python ./batch/insert_files.py
+  390  docker exec kingdryproject python ./batch/insert_files.py
+  391  docker exec kingproject python ./batch/insert_files.py
+  392  docker exec kingProject python ./batch/insert_files.py
+  393  docker exec kingProject-app python ./batch/insert_files.py
+  394  docker exec kingproject-app python ./batch/insert_files.py
+  395  git add .
+  396  docker exec -it kingproject bash
+  397  docker exec -it kingProject bash
+  398  docker exec -it kingProject-app bash
+  399  docker exec -it kingproject-app bash
+  400  docker-compose down
+  401  docker-compose up -d 
+  402  docker-compose down
+  403  docker-compose up -d 
+  404  docker-compose down
+  405  docker-compose up -d 
+  406  docker-compose down
+  407  docker-compose up -d 
+  408  docker-compose down
+  409  docker-compose up -d 
+  410  docker logs kingproject-app
+  411  docker-compose down
+  412  docker-compose up -d 
+  413  docker-compose down
+  414  docker-compose up -d 
+  415  docker logs kingproject-app
+  416  docker-compose down
+  417  docker-compose up -d 
+  418  docker-compose down
+  419  docker-compose up -d 
+  420  docker-compose down
+  421  docker-compose up -d 
+  422  docker-compose down
+  423  docker-compose up -d 
+  424  docker-compose down
+  425  docker-compose up -d 
+  426  このサイトにアクセスできません
+  427  localhost で接続が拒否されました。
+  428  次をお試しください
+  429  接続を確認する
+  430  プロキシとファイアウォールを確認する
+  431  ERR_CONNECTION_REFUSED
+  432  exit
+  433  docker ps
+  434  docker-compose up -d
+  435  docker ps
+  436  docker-compose down
+  437  docker-compose up -d
+  438  docker ps
+  439  docker exec kingproject-app python ./batch/download_files.py 
+  440  docker exec kingproject-app python ./batch/insert_files.py
+  441  export FLASK_DEBUG=1
+  442  docker exec kingproject-app python ./batch/insert_files.py
+  443  docker network ls | cat
+  444  docker ps | grep mysql | cat
+  445  docker inspect kingproject-db | grep -A 10 "Env" | cat
+  446  docker ps
+  447  docker exec kingproject-app python ./batch/insert_files.py
+  448  docker exec kingproject-app python ./batch/download_config.py
+  449  docker exec kingproject-app python ./batch/download_files.py
+  450  ls -la /app/batch/download/
+  451  ls -la batch/download/
+  452  docker exec kingproject-app python ./batch/insert_files.py
+  453  docker-compose down
+  454  docker-compose up -d
+  455  docker-compose down
+  456  docker-compose up -d
+  457  docker-compose down
+  458  docker-compose up -d
+  459  exit
+  460  vmstat
+  461  vmstat 2
+  462  vmstat 5 > vmstat.txt
+  463  vi vmstat.sh
+  464  ls
+  465  vmstat.sh
+  466  sh vmstat.sh
+  467  cat vmstat.txt 
+  468  vi
+  469  vi vmstat.txt 
+  470  vi vmstat.sh 
+  471  sh vmstat.sh
+  472  cat vmstat.txt 
+  473  sh vmstat.sh
+  474  sh vmstat.sh &
+  475  less -t vmstat.txt 
+  476  less  vmstat.txt 
+  477  cat  vmstat.txt 
+  478  sh vmstat.sh 
+  479  vi vmstat.sh 
+  480  sh vmstat.sh 
+  481  vi vmstat.sh 
+  482  sh vmstat.sh 
+  483  vi vmstat.sh 
+  484  sh vmstat.sh 
+  485  pip install flask-wtf flask-migrate
+  486  flask db migrate -m "Add shipping logs table"
+  487  flask db migrate -m "Add shipping logs table"
+  488  flask db upgrade
+  489  flask db migrate -m "Add shipping logs table"
+  490  docker exec -it kingproject-app flask db migrate -m "Add shipping logs table"
+  491  tree
+  492  docker-compose down
+  493  docker-compose up -d
+  494  docker-compose down
+  495  docker-compose up -d
+  496  cat vmstat.txt 
+  497  cat ~/vmstat.txt 
+  498  cat ~/vmstat.sh
+  499  cat ~/vmstat.txt 
+  500  systemctl status mariadb
+  501  flask db migrate -m "Add shipping logs table"
+  502  flask db init
+  503  flask db migrate -m "Add shipping logs table"
+  504  flask db upgrade
+  505  docker restart kingproject-app
+  506  docker exec -it db mysql -ushipping_user -pshipping_password shipping_db -e "DROP TABLE IF EXISTS items, shippinglog;"
+  507  docker ps | grep mysql
+  508  docker exec -it kingproject-db mysql -ushipping_user -pshipping_password shipping_db -e "DROP TABLE IF EXISTS items, shippinglog;"
+  509  docker-compose down
+  510  docker-compose up -d
+  511  docker-compose down
+  512  docker-compose up -d
+  513  docker-compose down
+  514  docker-compose up -d
+  515  docker exec kingproject-app python ./batch/insert_files.py
+  516  docker-compose down
+  517  docker-compose up -d
+  518  docker-compose down
+  519  docker-compose up -d
+  520* docker-compose 
+  521  docker-compose down
+  522  docker-compose up -d
+  523  history > history.txt

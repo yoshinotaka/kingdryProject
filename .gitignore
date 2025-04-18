@@ -46,4 +46,10 @@ nginx/ssl/
 
 # OS
 .DS_Store
-Thumbs.db 
+Thumbs.db
+
+# Batch processing
+batch/config/*.py
+!batch/config/__init__.py
+batch/download/*
+batch/logs/* 

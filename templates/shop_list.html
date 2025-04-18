@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>店舗一覧</h2>
+    <form action="{{ url_for('shop_items') }}" method="GET">
+        <div class="list-group">
+            {% for shop_id in shop_ids %}
+            <div class="list-group-item">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="shop_id" id="shop_{{ shop_id }}" value="{{ shop_id }}" required>
+                    <label class="form-check-label" for="shop_{{ shop_id }}">
+                        店舗ID: {{ shop_id }}
+                    </label>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="mt-3">
+            <button type="submit" class="btn btn-primary">選択した店舗の商品一覧を表示</button>
+        </div>
+    </form>
+</div>
+{% endblock %} 

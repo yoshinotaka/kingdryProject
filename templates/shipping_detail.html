@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">出荷詳細情報</h2>
+    
+    <div class="card">
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <h5 class="card-title">基本情報</h5>
+                    <table class="table">
+                        <tr>
+                            <th>店舗ID</th>
+                            <td>{{ item.shop_id }}</td>
+                        </tr>
+                        <tr>
+                            <th>伝票番号</th>
+                            <td>{{ item.denpyo_no }}</td>
+                        </tr>
+                        <tr>
+                            <th>タグ1</th>
+                            <td>{{ item.tag1 }}</td>
+                        </tr>
+                        <tr>
+                            <th>商品コード</th>
+                            <td>{{ item.shohin_code }}</td>
+                        </tr>
+                        <tr>
+                            <th>商品名</th>
+                            <td>{{ item.shohin_name }}</td>
+                        </tr>
+                        <tr>
+                            <th>顧客名</th>
+                            <td>{{ item.kokyaku_name }}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <h5 class="card-title">出荷情報</h5>
+                    <table class="table">
+                        <tr>
+                            <th>出荷日</th>
+                            <td>{{ item.syukka_date.strftime('%Y-%m-%d') if item.syukka_date else '-' }}</td>
+                        </tr>
+                        <tr>
+                            <th>出荷便</th>
+                            <td>{{ item.syukka_time if item.syukka_time else '-' }}</td>
+                        </tr>
+                        <tr>
+                            <th>工場担当者</th>
+                            <td>{{ item.factory_staff_name if item.factory_staff_name else '-' }}</td>
+                        </tr>
+                        <tr>
+                            <th>状態</th>
+                            <td class="status-badge">
+                                {% if item.status == 'reship' %}
+                                    <span class="badge bg-warning">再出荷</span>
+                                {% elif item.status == 'returned' %}
+                                    <span class="badge bg-danger">返却済</span>
+                                {% elif item.syukka_flag == 1 %}
+                                    <span class="badge bg-success">出荷済</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">未出荷</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <a href="{{ url_for('shipping_list') }}" class="btn btn-primary">一覧に戻る</a>
+                {% if item.syukka_flag != 1 and item.status != 'returned' %}
+                    <button class="btn btn-success process-shipping" 
+                            data-shop-id="{{ item.shop_id }}" 
+                            data-tag1="{{ item.tag1 }}">
+                        出荷処理
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.alert {
+    z-index: 1050;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+</style>
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const processButton = document.querySelector('.process-shipping');
+    if (processButton) {
+        processButton.addEventListener('click', function() {
+            if (!confirm('出荷処理を実行しますか？')) {
+                return;
+            }
+            
+            const shopId = this.dataset.shopId;
+            const tag1 = this.dataset.tag1;
+            
+            // 即座にUIを更新
+            const statusBadge = document.querySelector('.status-badge');
+            const syukkaDateCell = document.querySelector('td:contains("出荷日")').nextElementSibling; // 出荷日のセル
+            statusBadge.innerHTML = '<span class="badge bg-success">出荷済</span>';
+            
+            // 出荷処理ボタンを非表示
+            this.style.display = 'none';
+            
+            // 非同期で実際の更新処理を実行
+            fetch('/api/process_shipping', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    shop_id: shopId,
+                    tag1: tag1
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    // エラーの場合は元の状態に戻す
+                    statusBadge.innerHTML = '<span class="badge bg-secondary">未出荷</span>';
+                    this.style.display = 'inline-block';
+                    alert(data.error);
+                } else {
+                    // 成功時は更新件数と商品情報を通知
+                    const message = data.message;
+                    let itemsInfo = '';
+                    
+                    if (data.updated_items && Array.isArray(data.updated_items)) {
+                        itemsInfo = data.updated_items.map(item => 
+                            `店舗ID: ${item.shop_id}, タグ1: ${item.tag1}, 預かり日: ${item.azukari_date || '-'}, 出荷日: ${item.syukka_date || '-'}`
+                        ).join('<br>');
+                        
+                        // 出荷日を更新
+                        if (data.updated_items[0] && data.updated_items[0].syukka_date) {
+                            syukkaDateCell.textContent = data.updated_items[0].syukka_date;
+                        }
+                    }
+                    
+                    const notification = document.createElement('div');
+                    notification.className = 'alert alert-success alert-dismissible fade show position-fixed top-0 end-0 m-3';
+                    notification.innerHTML = `
+                        ${message}<br>
+                        ${itemsInfo ? `<strong>更新した商品:</strong><br>${itemsInfo}` : ''}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    `;
+                    document.body.appendChild(notification);
+                    
+                    // 5秒後に通知を自動で消す
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 5000);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // エラーの場合は元の状態に戻す
+                statusBadge.innerHTML = '<span class="badge bg-secondary">未出荷</span>';
+                this.style.display = 'inline-block';
+                
+                // エラー通知を表示
+                const errorNotification = document.createElement('div');
+                errorNotification.className = 'alert alert-danger alert-dismissible fade show position-fixed top-0 end-0 m-3';
+                errorNotification.innerHTML = `
+                    出荷処理中にエラーが発生しました。<br>
+                    エラー内容: ${error.message || '不明なエラー'}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                `;
+                document.body.appendChild(errorNotification);
+                
+                // 5秒後に通知を自動で消す
+                setTimeout(() => {
+                    errorNotification.remove();
+                }, 5000);
+            });
+        });
+    }
+});
+</script>
+{% endblock %}
+{% endblock %} 

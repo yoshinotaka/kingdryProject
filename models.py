@@ -65,3 +65,16 @@ class Item(db.Model):
 
     def __repr__(self):
         return f'<Item {self.shohin_code}: {self.shohin_name}>' 
+
+class ShippingLog(db.Model):
+    __tablename__ = 'shipping_logs'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    shop_id = db.Column(db.String(50))
+    tag1 = db.Column(db.String(50))
+    azukari_date = db.Column(db.Date)
+    update_count = db.Column(db.Integer)
+    
+    def __repr__(self):
+        return f'<ShippingLog {self.id}: {self.shop_id} - {self.tag1}>' 

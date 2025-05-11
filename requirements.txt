@@ -11,3 +11,4 @@ paramiko==2.12.0
 pandas==2.0.3
 numpy==1.24.3
 WeasyPrint==56.1
+gevent>=1.4.0

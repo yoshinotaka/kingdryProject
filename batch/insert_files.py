@@ -7,6 +7,10 @@ from datetime import datetime
 from config.download_config import DOWNLOAD_CONFIG, db
 from models import Item
 
+def get_today_date():
+    """今日の日付をYYYY-MM-DD形式で取得"""
+    return datetime.now().strftime('%Y-%m-%d')
+
 def parse_date(date_str):
     """日付文字列をパースしてdatetimeオブジェクトに変換"""
     if not date_str or date_str == '-':
@@ -16,7 +20,7 @@ def parse_date(date_str):
     except ValueError:
         return None
 
-def process_csv_files(directory_path, file_pattern):
+def process_csv_files(directory_path, file_pattern=None):
     """指定ディレクトリ内のパターンに一致するCSVファイルを処理"""
     processed_count = 0
     
@@ -25,6 +29,11 @@ def process_csv_files(directory_path, file_pattern):
         if not os.path.exists(directory_path):
             print(f"ディレクトリが見つかりません: {directory_path}")
             return
+        
+        # ファイルパターンが指定されていない場合は今日の日付を使用
+        if file_pattern is None:
+            today = get_today_date()
+            file_pattern = f"uriage_daityo_oazukaribi_shitei{today}-*.csv"
         
         # ディレクトリ内のファイルを取得
         files = os.listdir(directory_path)
@@ -137,7 +146,7 @@ if __name__ == "__main__":
     from app import app
     with app.app_context():
         directory_path = "batch/download"  # パスを修正
-        file_pattern = "uriage_daityo_oazukaribi_shitei2023-*.csv"  # パターンを修正
+        file_pattern = "uriage_daityo_oazukaribi_shitei2025-04-*.csv"  # パターンを修正
        
         process_csv_files(directory_path, file_pattern)
 

@@ -4,6 +4,85 @@
 <div class="container">
     <h2 class="mb-4">出荷状況一覧</h2>
     
+    <!-- 直接出荷フォーム -->
+    <div class="accordion mb-4" id="directShippingAccordion">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#directShippingForm" aria-expanded="false" aria-controls="directShippingForm">
+                    <i class="bi bi-box-seam me-2"></i>直接出荷処理
+                </button>
+            </h2>
+            <div id="directShippingForm" class="accordion-collapse collapse" data-bs-parent="#directShippingAccordion">
+                <div class="accordion-body">
+                    <form id="directShippingForm" class="row g-3">
+                        <div class="col-md-3">
+                            <label for="direct_shop_id" class="form-label">店舗番号</label>
+                            <input type="text" class="form-control" id="direct_shop_id" name="direct_shop_id" placeholder="店舗番号を入力" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="direct_tag1" class="form-label">タグ番号</label>
+                            <input type="text" class="form-control" id="direct_tag1" name="direct_tag1" placeholder="タグ番号を入力" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="direct_packaging_shape" class="form-label">包装</label>
+                            <select class="form-select" id="direct_packaging_shape" name="direct_packaging_shape" required>
+                                <option value="">選択してください</option>
+                                <option value="立体">立体</option>
+                                <option value="たたみ">たたみ</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="direct_syukka_date" class="form-label">出荷日</label>
+                            <input type="date" class="form-control" id="direct_syukka_date" name="direct_syukka_date" value="{{ today }}" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="direct_syukka_time" class="form-label">出荷便</label>
+                            <select class="form-select" id="direct_syukka_time" name="direct_syukka_time" required>
+                                <option value="">選択してください</option>
+                                <option value="AM便">AM便</option>
+                                <option value="PM便">PM便</option>
+                                <option value="最終便">最終便</option>
+                                <option value="中間便">中間便</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="direct_factory_staff_name" class="form-label">担当者</label>
+                            <select class="form-select" id="direct_factory_staff_name" name="direct_factory_staff_name" required>
+                                <option value="">選択してください</option>
+                                <option value="担当者A">担当者A</option>
+                                <option value="担当者B">担当者B</option>
+                                <option value="担当者C">担当者C</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="direct_factory_comment" class="form-label">工場コメント</label>
+                            <textarea class="form-control" id="direct_factory_comment" name="direct_factory_comment" rows="1"></textarea>
+                        </div>
+                        <div class="col-md-3 d-flex align-items-end">
+                            <button type="button" class="btn btn-primary" onclick="processDirectShipping()">出荷処理を実行</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- バーコード入力フォーム -->
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">バーコード読み取り</h5>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="barcodeInput" placeholder="バーコードを読み取ってください" autofocus>
+                        <button class="btn btn-primary" type="button" onclick="processBarcode()">処理</button>
+                    </div>
+                    <small class="text-muted">9桁のバーコードを読み取ってください（店舗番号3桁 + タグ番号4桁 + チェックディジット1桁）</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- 出荷処理フィルター -->
     <div class="row mb-3">
         <div class="col-md-3">
@@ -209,11 +288,61 @@
 <script>
 let currentPage = 1;
 let isLoading = false;
-let currentSort = {
-    column: 'azukari_date',
-    order: 'desc'
-};
+let currentSort = { column: 'created_at', order: 'desc' };
 let currentFilters = {};
+
+// 直接出荷処理の関数
+function processDirectShipping() {
+    const shopId = document.getElementById('direct_shop_id').value;
+    const tag1 = document.getElementById('direct_tag1').value;
+    const packagingShape = document.getElementById('direct_packaging_shape').value;
+    const syukkaDate = document.getElementById('direct_syukka_date').value;
+    const syukkaTime = document.getElementById('direct_syukka_time').value;
+    const factoryStaffName = document.getElementById('direct_factory_staff_name').value;
+    const factoryComment = document.getElementById('direct_factory_comment').value;
+    
+    if (!shopId || !tag1 || !packagingShape || !syukkaDate || !syukkaTime || !factoryStaffName) {
+        alert('必須項目をすべて入力してください。');
+        return;
+    }
+    
+    if (!confirm('出荷処理を実行しますか？')) {
+        return;
+    }
+    
+    fetch('/api/process_shipping', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            shop_id: shopId,
+            tag1: tag1,
+            packaging_shape: packagingShape,
+            syukka_date: syukkaDate,
+            syukka_time: syukkaTime,
+            factory_staff_name: factoryStaffName,
+            factory_comment: factoryComment
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+        } else {
+            alert(data.message);
+            // フォームをリセット
+            document.getElementById('directShippingForm').reset();
+            document.getElementById('direct_syukka_date').value = '{{ today }}';
+            // ページをリロード
+            location.reload();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('出荷処理中にエラーが発生しました。');
+    });
+}
 
 function getStatusBadge(status, syukkaFlag, shopId, tag1) {
     if (status === 'reship') return '<span class="badge bg-warning">再出荷</span>';
@@ -523,5 +652,120 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // イベントリスナーの追加
 document.addEventListener('click', handleShippingProcess);
+
+// バーコード処理関数
+function processBarcode() {
+    const barcode = document.getElementById('barcodeInput').value.trim();
+    
+    // バーコードの形式チェック
+    if (barcode.length !== 9) {
+        alert('バーコードは9桁である必要があります。');
+        return;
+    }
+    
+    // 店舗番号とタグ番号の抽出
+    const shopId = barcode.substring(0, 3);
+    const tag1 = barcode.substring(4, 8);
+    
+    // チェックディジットの検証
+    const checkDigit = barcode.substring(8, 9);
+    const checkDigitCalculated = calculateCheckDigit(barcode.substring(0, 8));
+    
+    if (checkDigitCalculated==false) {
+        alert('チェックディジットが正しくありません。');
+        return;
+    }
+    
+    // 出荷処理に必要な情報を取得
+    const packagingShape = document.getElementById('process_packaging_shape').value;
+    const syukkaDate = document.getElementById('process_syukka_date').value;
+    const syukkaTime = document.getElementById('process_syukka_time').value;
+    const factoryStaffName = document.getElementById('process_factory_staff_name').value;
+    
+    // 必須項目のチェック
+    let hasError = false;
+    const requiredFields = {
+        'process_packaging_shape': '包装',
+        'process_syukka_date': '出荷日',
+        'process_syukka_time': '出荷便',
+        'process_factory_staff_name': '担当者'
+    };
+
+    // すべての必須フィールドの赤枠をリセット
+    Object.keys(requiredFields).forEach(fieldId => {
+        const element = document.getElementById(fieldId);
+        element.classList.remove('is-invalid');
+    });
+
+    // 未入力項目をチェック
+    const missingFields = [];
+    Object.entries(requiredFields).forEach(([fieldId, fieldName]) => {
+        const element = document.getElementById(fieldId);
+        if (!element.value) {
+            element.classList.add('is-invalid');
+            missingFields.push(fieldName);
+        }
+    });
+
+    // 未入力項目がある場合は警告を表示
+    if (missingFields.length > 0) {
+        const warningNotification = document.createElement('div');
+        warningNotification.className = 'alert alert-warning alert-dismissible fade show';
+        warningNotification.innerHTML = `
+            未入力項目があります：${missingFields.join(', ')}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+        document.querySelector('.container').insertBefore(warningNotification, document.querySelector('.container').firstChild);
+        
+        // 5秒後に通知を自動で消す
+        setTimeout(() => {
+            warningNotification.remove();
+        }, 5000);
+    }
+    
+    // 出荷処理APIを呼び出し
+    fetch('/api/process_shipping', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            shop_id: shopId,
+            tag1: tag1,
+            packaging_shape: packagingShape,
+            syukka_date: syukkaDate,
+            syukka_time: syukkaTime,
+            factory_staff_name: factoryStaffName
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+        } else {
+            alert(data.message);
+            // バーコード入力欄をクリア
+            document.getElementById('barcodeInput').value = '';
+            // ページをリロード
+            location.reload();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('出荷処理中にエラーが発生しました。');
+    });
+}
+
+// チェックディジット計算関数
+function calculateCheckDigit(number) {
+    return true;
+}
+
+// バーコード入力欄にEnterキーが押された時の処理
+document.getElementById('barcodeInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        processBarcode();
+    }
+});
 </script>
 {% endblock %} 

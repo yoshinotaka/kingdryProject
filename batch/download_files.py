@@ -45,6 +45,10 @@ class FileDownloader:
         except IOError:
             return False
 
+    def get_today_date(self):
+        """今日の日付をYYYY-MM-DD形式で取得"""
+        return datetime.now().strftime('%Y-%m-%d')
+
     def download_files(self):
         """指定されたファイルをダウンロード"""
         try:
@@ -74,7 +78,8 @@ class FileDownloader:
             
             # リモートディレクトリ内のファイルを取得
             remote_path = self.config['download']['remote_path']
-            file_pattern = self.config['download']['file_pattern']
+            today = self.get_today_date()
+            file_pattern = f"uriage_daityo_oazukaribi_shitei{today}-*.csv"
             
             self.logger.info(f"リモートパス: {remote_path}")
             self.logger.info(f"ファイルパターン: {file_pattern}")

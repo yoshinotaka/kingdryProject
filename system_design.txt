@@ -1,0 +1,230 @@
+# 出荷管理システム詳細設計書
+
+## 1. システム概要
+
+### 1.1 業務フロー
+1. 商品預かり
+   - 店舗から商品を受け取る
+   - 店舗番号（3桁）とタグ番号（4桁）を付与
+   - 預かり日を記録
+
+2. 出荷処理
+   - 直接出荷処理：手動で店舗番号とタグ番号を入力
+   - バーコード処理：9桁バーコード（店舗番号3桁 + タグ番号4桁 + チェックディジット1桁）を読み取り
+   - 包装形状、出荷日、出荷便、担当者を記録
+
+3. 出荷履歴管理
+   - 出荷処理の履歴を記録
+   - 店舗別・日付別の集計
+
+## 2. データベース設計
+
+### 2.1 商品テーブル（items）
+CREATE TABLE items (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    shop_id CHAR(3) NOT NULL COMMENT '店舗番号（3桁）',
+    tag1 CHAR(4) NOT NULL COMMENT 'タグ番号（4桁）',
+    denpyo_no VARCHAR(20) COMMENT '伝票番号',
+    azukari_date DATE COMMENT '預かり日',
+    shohin_name VARCHAR(100) COMMENT '商品名',
+    course VARCHAR(50) COMMENT 'コース',
+    color VARCHAR(50) COMMENT '色',
+    contents TEXT COMMENT '内容',
+    packaging_shape VARCHAR(20) COMMENT '包装形状（立体/たたみ）',
+    syukka_date DATE COMMENT '出荷日',
+    syukka_time VARCHAR(20) COMMENT '出荷便（AM便/PM便/最終便/中間便）',
+    factory_staff_name VARCHAR(50) COMMENT '工場担当者名',
+    factory_staff_id VARCHAR(20) COMMENT '工場担当者ID',
+    factory_location VARCHAR(100) COMMENT '工場場所',
+    factory_comment TEXT COMMENT '工場コメント',
+    syukka_flag TINYINT(1) DEFAULT 0 COMMENT '出荷フラグ（0:未出荷/1:出荷済）',
+    status VARCHAR(20) COMMENT '状態（通常/再出荷/返却済）',
+    factory_process_datetime DATETIME COMMENT '工場処理日時',
+    return_datetime DATETIME COMMENT '返却日時',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_shop_tag (shop_id, tag1),
+    INDEX idx_azukari_date (azukari_date),
+    INDEX idx_syukka_date (syukka_date)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品情報';
+
+### 2.2 出荷ログテーブル（shipping_logs）
+CREATE TABLE shipping_logs (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    shop_id CHAR(3) NOT NULL COMMENT '店舗番号',
+    tag1 CHAR(4) NOT NULL COMMENT 'タグ番号',
+    azukari_date DATE COMMENT '預かり日',
+    update_count INT COMMENT '更新件数',
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_shop_tag (shop_id, tag1),
+    INDEX idx_timestamp (timestamp)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='出荷ログ';
+
+## 3. 機能詳細
+
+### 3.1 バーコード処理機能
+#### バーコード形式
+- 9桁固定長
+- 構成：店舗番号(3桁) + タグ番号(4桁) + チェックディジット(1桁)
+- 例：`001123456`（店舗番号:001、タグ番号:1234、チェックディジット:56）
+
+#### 処理フロー
+1. バーコード読み取り
+2. 形式チェック（9桁）
+3. 店舗番号・タグ番号の抽出
+4. チェックディジットの検証
+5. 出荷情報の取得
+   - 包装形状
+   - 出荷日
+   - 出荷便
+   - 担当者
+6. データベース更新
+7. ログ記録
+
+### 3.2 出荷処理機能
+#### 直接出荷処理
+- 入力項目
+  - 店舗番号（3桁）
+  - タグ番号（4桁）
+  - 包装形状（立体/たたみ）
+  - 出荷日
+  - 出荷便（AM便/PM便/最終便/中間便）
+  - 担当者
+  - 工場コメント（任意）
+
+#### バーコード処理
+- 入力項目
+  - バーコード（9桁）
+  - 包装形状（立体/たたみ）
+  - 出荷日
+  - 出荷便（AM便/PM便/最終便/中間便）
+  - 担当者
+
+### 3.3 出荷状況一覧機能
+#### 表示項目
+- 店舗ID
+- 預かり日
+- タグ1
+- 商品名
+- コース
+- 色
+- 内容
+- 包装
+- 出荷日
+- 出荷便
+- 工場担当者
+- 状態
+- 操作
+
+#### フィルター機能
+- 店舗ID
+- 伝票番号
+- タグ1
+- 状態（未出荷/出荷済/再出荷/返却済）
+
+#### ソート機能
+- 各カラムでのソート
+- 昇順/降順の切り替え
+
+### 3.4 出荷履歴管理機能
+#### ログ記録項目
+- 店舗番号
+- タグ番号
+- 預かり日
+- 更新件数
+- タイムスタンプ
+
+#### 検索機能
+- 店舗ID
+- タグ番号
+- 日付範囲
+
+## 4. API設計
+
+### 4.1 出荷処理API
+POST /api/process_shipping
+Request:
+{
+    "shop_id": "string(3)",      // 店舗番号（3桁）
+    "tag1": "string(4)",         // タグ番号（4桁）
+    "packaging_shape": "string", // 包装形状（立体/たたみ）
+    "syukka_date": "YYYY-MM-DD", // 出荷日
+    "syukka_time": "string",     // 出荷便（AM便/PM便/最終便/中間便）
+    "factory_staff_name": "string" // 担当者
+}
+
+Response:
+{
+    "message": "string",         // 処理結果メッセージ
+    "updated_items": [           // 更新された商品情報
+        {
+            "shop_id": "string",
+            "tag1": "string",
+            "azukari_date": "YYYY-MM-DD",
+            "packaging_shape": "string",
+            "syukka_date": "YYYY-MM-DD",
+            "syukka_time": "string",
+            "factory_staff_name": "string"
+        }
+    ]
+}
+
+### 4.2 商品一覧API
+GET /api/shipping_list
+Parameters:
+- page: int                    // ページ番号
+- sort_by: string             // ソート項目
+- sort_order: string          // ソート順（asc/desc）
+- shop_id: string(3)          // 店舗番号
+- denpyo_no: string           // 伝票番号
+- tag1: string(4)             // タグ番号
+- status: string              // 状態
+
+Response:
+{
+    "items": [
+        {
+            "shop_id": "string",
+            "azukari_date": "YYYY-MM-DD",
+            "tag1": "string",
+            "course": "string",
+            "color": "string",
+            "contents": "string",
+            "packaging_shape": "string",
+            "syukka_date": "YYYY-MM-DD",
+            "syukka_time": "string",
+            "factory_staff_name": "string",
+            "status": "string",
+            "syukka_flag": int,
+            "shohin_name": "string"
+        }
+    ]
+}
+
+## 5. 移行手順
+
+### 5.1 データベース移行
+1. テーブル作成
+   - 上記のSQLを実行してテーブルを作成
+   - インデックスの作成
+
+2. データ移行
+   - 既存データのエクスポート
+   - データ形式の変換
+   - 新テーブルへのインポート
+
+### 5.2 アプリケーション移行
+1. 環境構築
+   - Python環境のセットアップ
+   - 必要なパッケージのインストール
+   - 設定ファイルの準備
+
+2. アプリケーションの配置
+   - ソースコードの配置
+   - 静的ファイルの配置
+   - 設定ファイルの配置
+
+3. 動作確認
+   - 各機能の動作確認
+   - エラーハンドリングの確認
+   - パフォーマンスの確認 

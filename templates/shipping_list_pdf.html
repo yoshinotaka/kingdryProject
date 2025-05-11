@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>出荷状況一覧</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         @page {
             size: B5;
@@ -49,57 +50,115 @@
         }
         .table-column {
             flex: 1;
-            min-width: 25%;
+            min-width: 0;
+        }
+        #pdfContent {
+            padding: 20px;
+        }
+        .button-container {
+            text-align: center;
+            margin: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <h1>出荷状況一覧</h1>
-    <div class="table-container">
-        <div class="table-column">
-            <table>
-                <thead>
-                    <tr>
-                        <th>店舗ID</th>
-                        <th>預かり日</th>
-                        <th>タグ1</th>
-                        <th>商品名</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in items %}
-                    {% if loop.index0 % 200 == 0 and not loop.first %}
-                    </tbody>
-                    </table>
-                    </div>
-                    <div class="page-break"></div>
-                    <h1>出荷状況一覧（続き）</h1>
-                    <div class="table-container">
-                        <div class="table-column">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>店舗ID</th>
-                                        <th>預かり日</th>
-                                        <th>タグ1</th>
-                                        <th>商品名</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                    {% endif %}
-                    <tr>
-                        <td>{{ item.shop_id }}</td>
-                        <td>{{ item.azukari_date.strftime('%Y-%m-%d') if item.azukari_date else '-' }}</td>
-                        <td>{{ item.tag1 }}</td>
-                        <td>{{ item.shohin_name if item.shohin_name else '-' }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+    <div class="button-container">
+        <button onclick="generatePDF()">PDFを生成</button>
     </div>
-    <div class="footer">
-        出力日時: {{ now.strftime('%Y-%m-%d %H:%M:%S') }}
+    <div id="pdfContent">
+        <h1>出荷状況一覧</h1>
+        <div id="itemsTable"></div>
+        <div class="footer" id="footer"></div>
     </div>
+
+    <script>
+        async function loadData() {
+            try {
+                const response = await fetch('/api/shipping_list/pdf');
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('データの取得に失敗しました:', error);
+                return null;
+            }
+        }
+
+        function createTable(items) {
+            const table = document.createElement('table');
+            const thead = document.createElement('thead');
+            const tbody = document.createElement('tbody');
+
+            // ヘッダー行の作成
+            const headerRow = document.createElement('tr');
+            const headers = ['お預かり日', 'タグ1', 'コース', '色', '内容物', '包装形状', '出荷日', '出荷時間', '工場担当者', 'ステータス', '商品名'];
+            headers.forEach(header => {
+                const th = document.createElement('th');
+                th.textContent = header;
+                headerRow.appendChild(th);
+            });
+            thead.appendChild(headerRow);
+
+            // データ行の作成
+            items.forEach(item => {
+                const row = document.createElement('tr');
+                const fields = [
+                    item.azukari_date,
+                    item.tag1,
+                    item.course,
+                    item.color,
+                    item.contents,
+                    item.packaging_shape,
+                    item.syukka_date,
+                    item.syukka_time,
+                    item.factory_staff_name,
+                    item.status,
+                    item.shohin_name
+                ];
+                fields.forEach(field => {
+                    const td = document.createElement('td');
+                    td.textContent = field || '';
+                    row.appendChild(td);
+                });
+                tbody.appendChild(row);
+            });
+
+            table.appendChild(thead);
+            table.appendChild(tbody);
+            return table;
+        }
+
+        async function generatePDF() {
+            const data = await loadData();
+            if (!data) return;
+
+            const itemsTable = document.getElementById('itemsTable');
+            const footer = document.getElementById('footer');
+            
+            // テーブルの作成
+            itemsTable.innerHTML = '';
+            itemsTable.appendChild(createTable(data.items));
+            
+            // フッターの更新
+            footer.textContent = `生成日時: ${data.now}`;
+
+            // PDF生成のオプション設定
+            const options = {
+                margin: 0.5,
+                filename: `shipping_list_${data.now.replace(/[: ]/g, '-')}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'cm', format: 'b5', orientation: 'portrait' }
+            };
+
+            // PDFの生成
+            const element = document.getElementById('pdfContent');
+            await html2pdf().set(options).from(element).save();
+        }
+    </script>
 </body>
 </html> 

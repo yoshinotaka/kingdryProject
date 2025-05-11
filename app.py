@@ -49,7 +49,7 @@ def find_items_by_shop_and_tag(shop_id, tag1):
     ).all()
     
     if not items:
-        return None, '該当する商品が見つかりませんでした。'
+        return None, f'店舗ID: {shop_id}, タグ番号: {tag1} の商品が見つかりませんでした。'
     
     # 複数件のチェックを削除し、全てのアイテムを返す
     return items, None
@@ -398,32 +398,7 @@ def api_shop_items():
 
 @app.route('/shipping_list/pdf')
 def shipping_list_pdf():
-    # 最新の200件を取得
-    items = Item.query.order_by(Item.id.desc()).limit(200).all()
-    
-    # HTMLを生成
-    html = render_template('shipping_list_pdf.html', 
-                         items=items,
-                         now=datetime.utcnow())
-    
-    # 一時ファイルを作成
-    timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
-    pdf_filename = f"shipping_list_{timestamp}.pdf"
-    pdf_path = os.path.join(app.root_path, 'static', 'pdf', pdf_filename)
-    
-    # PDFディレクトリが存在しない場合は作成
-    os.makedirs(os.path.dirname(pdf_path), exist_ok=True)
-    
-    # PDFを生成
-    HTML(string=html).write_pdf(pdf_path)
-    
-    # PDFをブラウザに表示
-    return send_file(
-        pdf_path,
-        mimetype='application/pdf',
-        as_attachment=False,  # ブラウザで表示
-        download_name=pdf_filename
-    )
+    return render_template('shipping_list_pdf.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000) 

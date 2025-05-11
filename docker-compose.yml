@@ -1,6 +1,11 @@
 version: '3.8'
 services:
   app:
+    deploy:
+      resources:
+        limits:
+          cpus: '1.5'  # 3コアの半分
+          memory: 800M
     build: .
     container_name: kingproject-app
     restart: always
@@ -23,6 +28,11 @@ services:
       - app-network
 
   nginx:
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 300M
     image: nginx:1.25.4
     container_name: kingproject-nginx
     restart: always
@@ -40,6 +50,11 @@ services:
       - app-network
 
   db:
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 800M
     image: mysql:8.0
     container_name: kingproject-db
     restart: always
